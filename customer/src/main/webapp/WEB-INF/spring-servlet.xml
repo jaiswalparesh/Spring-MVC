@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
+
+	<!-- Add support for component scanning -->
+
+	<context:component-scan base-package="com.customer" />
+
+	<!-- Add support for conversion, formatting and validation support -->
+
+	<mvc:annotation-driven />
+
+	<!-- Define Spring MVC view resolver -->
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+		<property value="/WEB-INF/view/" name="prefix" />
+
+		<property value=".jsp" name="suffix" />
+
+	</bean>
+
+	<!-- Step 1: Define Database DataSource / connection pool -->
+
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		id="myDataSource">
+
+		<property name="driverClassName" value="org.postgresql.Driver"></property>
+		<property name="url" value="jdbc:postgresql://localhost:5432/postgres" />		
+
+		<property value="postgres" name="username" />
+
+		<property value="root" name="password" />
+
+	</bean>
+
+	<!-- Step 2: Setup Hibernate session factory -->
+
+	<bean class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+		id="sessionFactory">
+
+		<property name="dataSource" ref="myDataSource" />
+
+		<property value="com.customer.entity" name="packagesToScan" />
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- Step 3: Setup Hibernate transaction manager -->
+
+	<bean class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+		id="myTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- Step 4: Enable configuration of transactional behavior based on annotations -->
+
+	<tx:annotation-driven transaction-manager="myTransactionManager" />
+
+	<!-- Add support for reading web resources: css, images, js, etc ... -->
+
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+</beans>
