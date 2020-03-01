@@ -7,4 +7,6 @@ import com.customer.entity.Customer;
 public interface CustomerDao {
 
 	public List<Customer> getCustomer();
+
+	public void addCustomer(Customer customer) throws Exception;
 }
