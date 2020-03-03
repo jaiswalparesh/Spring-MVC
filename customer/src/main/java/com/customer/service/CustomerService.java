@@ -10,4 +10,10 @@ public interface CustomerService {
 	public List<Customer> getCustomer();
 
 	public void addCustomer(CustomerInfo info) throws Exception;
+
+	public Customer getCustomer(int id) throws Exception;
+
+	public void updateCustomer(CustomerInfo info) throws Exception;
+
+	public void deleteCustomer(int id) throws Exception;
 }
