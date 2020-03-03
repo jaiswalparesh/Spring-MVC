@@ -28,4 +28,26 @@ public class CustomerServiceImpl implements CustomerService {
 		customerDao.addCustomer(new Customer(info));
 	}
 
+	@Override
+	@Transactional
+	public Customer getCustomer(int id) throws Exception {
+		return customerDao.getCustomer(id);
+	}
+
+	@Override
+	@Transactional
+	public void updateCustomer(CustomerInfo info) throws Exception {
+		Customer customer = customerDao.getCustomer(info.getId());
+		customer.setFirstName(info.getFirstName());
+		customer.setLastName(info.getLastName());
+		customer.setEmail(info.getEmail());
+		customerDao.updateCustomer(customer);
+	}
+
+	@Override
+	@Transactional
+	public void deleteCustomer(int id) throws Exception {
+		customerDao.deleteCustomer(customerDao.getCustomer(id));
+	}
+
 }
